@@ -1,0 +1,40 @@
+<html ng-app="mopidyWebClient">
+  <head>
+    <script type="text/javascript" src="/mopidy/mopidy.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+    <script type="text/javascript" src="/client.js"></script>
+  </head>
+  <body>
+    <h1>Mopidy Web Client</h1>
+    <div id="playback" ng-controller="playbackController">
+      <h2>{{ state }}</h2>
+      <p>Currently playing: {{ currentTrack.name }} by {{ currentTrack.artists[0].name }} from {{ currentTrack.album.name }}</p>
+      <ul>
+        <li><a ng-click="stop()">Stop</a></li>
+        <li><a ng-click="play()">Play</a></li>
+        <li><a ng-click="pause()">Pause</a></li>
+        <li><a ng-click="next()">Next</a></li>
+        <li><a ng-click="previous()">Previous</a></li>
+      </ul>
+    </div>
+    <div id="search" ng-controller="searchController">
+      <form ng-submit="search()">
+        <input name="query" ng-model="query">
+        <input type="submit" value="Search">
+      </form>
+      <h2>Artists</h2>
+      <ul>
+        <li ng-repeat="artist in result.artists.slice(0, 10)">{{ artist.name }}</li>
+      </ul>
+      <h2>Albums</h2>
+      <ul>
+        <li ng-repeat="album in result.albums.slice(0, 10)">{{ album.name }} -- {{ album.artists[0].name }}</li>
+      </ul>
+      <h2>Tracks</h2>
+      <ul>
+        <li ng-repeat="track in result.tracks.slice(0, 10)"><a ng-click="changeTrack(track)">{{ track.name }} -- {{ track.artists[0].name }} ({{ track.album.name }})</li>
+      </ul>
+    </div>
+  </body>
+</html
+
