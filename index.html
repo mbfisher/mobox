@@ -28,7 +28,7 @@
     <div id="playlist" ng-controller="playlistController">
       <table>
         <tbody>
-          <tr class="track" ng-repeat="(i, track) in tracklist" ng-click="sendTracklist(tracklist.slice(i))">
+          <tr class="track" ng-repeat="(i, track) in tracklist" ng-click="addToPlaylist(track)">
             <td class="track-name">{{ track.name }}</td>
             <td class="track-artist">{{ track.artists[0].name }}</td>
             <td class="track-album">{{ track.album.name }}</td>

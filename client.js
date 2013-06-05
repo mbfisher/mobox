@@ -193,18 +193,32 @@ function playlistController($scope, $tracklist) {
       console.log('Track changed');
     }, consoleError);
   };
+  var showTracklist  = function() {
+    mopidy.tracklist.getTracks().then(function(data) {
+      console.log($tracklist.updateTracks(data, 'playlistController::showTracklist'));
+    });
+  };
+
   $scope.changeTrack = function(track) {
     return changeTlTrack(mkTlTrack(track));
   };
-  $scope.sendTracklist = function(tracks) {
+
+  $scope.resetTracklist = function(tracks) {
     mopidy.tracklist.clear().then(function() {
       // TODO: Replace hack to remove $$hashKey from tracks
-      mopidy.tracklist.add(angular.fromJson(angular.toJson(tracks))).then(function() {
+      mopidy.tracklist.add(angular.fromJson(angular.toJson(tracks[0]))).then(function() {
         console.log('Tracklist sent');
         mopidy.playback.play();
       }, consoleError);
     }, consoleError);
+  }
+
+  $scope.addToPlaylist = function(track) {
+      mopidy.tracklist.add(angular.fromJson(angular.toJson([track]))).then(function() {
+        showTracklist();
+      }, consoleError);
   };
+
   $scope.$on('updateTracklist', function() {
     console.log('playlistController received broadcast [updateTracklist]');
     $scope.tracklist = $tracklist.tracks;

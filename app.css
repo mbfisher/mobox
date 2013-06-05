@@ -2,10 +2,10 @@
 ul li { list-style: none; }
 .border { border: 1px solid black; }
 
-#top-bar { height: 10%; }
+#top-bar { height: 7%; }
 #top-bar h1 { margin: 0; }
 
-.main-col { float: left; height: 70%; overflow: scroll; margin: 5px; padding: 5px; }
+.main-col { float: left; height: 73%; overflow: scroll; margin: 5px; padding: 5px; }
 
 #left-col { width: 28%; }
 #centre-col { width: 48%; }
