@@ -1,0 +1,26 @@
+* { -webkit-margin-before: 0; -webkit-margin-after: 0; -webkit-margin-start: 0; -webmkit-margin-end: 0; -webkit-padding-start: 0; -webkit-padding-end: 0; }
+ul li { list-style: none; }
+.border { border: 1px solid black; }
+
+#top-bar { height: 10%; }
+#top-bar h1 { margin: 0; }
+
+.main-col { float: left; height: 70%; overflow: scroll; margin: 5px; padding: 5px; }
+
+#left-col { width: 28%; }
+#centre-col { width: 48%; }
+#right-col { width: 18%; }
+
+#bottom-bar { height: 15%; clear: both; }
+
+#playback ul#controls li { display: inline-block; }
+
+#playlist table { table-layout: fixed; }
+#playlist table td.track-name { width: 50%; }
+#playlist table td.track-artist { width: 25%; }
+#playlist table td.track-album { width: 25%; }
+
+
+
+
+

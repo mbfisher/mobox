@@ -3,38 +3,79 @@
     <script type="text/javascript" src="/mopidy/mopidy.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
     <script type="text/javascript" src="/client.js"></script>
+
+    <link rel="stylesheet" href="/normalize.css">
+    <link rel="stylesheet" href="/app.css">
   </head>
   <body>
+    <div id="top-bar" class="border">
     <h1>Mopidy Web Client</h1>
-    <div id="playback" ng-controller="playbackController">
-      <h2>{{ state }}</h2>
-      <p>Currently playing: {{ currentTrack.name }} by {{ currentTrack.artists[0].name }} from {{ currentTrack.album.name }}</p>
+    </div><!-- /#top-bar -->
+
+    <div id="left-col" class="main-col border">
+
+    <div id="library" ng-controller="libraryController">
       <ul>
+        <li ng-repeat="playlist in playlists"><a ng-click="showPlaylist(playlist)">{{ playlist.name }}</a></li>
+      </ul>
+    </div><!-- /#playlists -->
+
+
+    </div><!-- /#left-col -->
+
+    <div id="centre-col" class="main-col border">
+
+    <div id="playlist" ng-controller="playlistController">
+      <table>
+        <tbody>
+          <tr class="track" ng-repeat="(i, track) in tracklist" ng-click="sendTracklist(tracklist.slice(i))">
+            <td class="track-name">{{ track.name }}</td>
+            <td class="track-artist">{{ track.artists[0].name }}</td>
+            <td class="track-album">{{ track.album.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div><!-- /#playlist -->
+
+    </div><!-- /#centre-col -->
+
+    <div id="right-col" class="main-col border">
+
+    <div id="search" ng-controller="searchController">
+      <form ng-submit="search()">
+        <input name="query" ng-model="query">
+        <input type="submit" value="Search">
+      </form>
+      <div class="column">
+      <h2>Artists</h2>
+      <ul>
+        <li ng-repeat="artist in result.artists.slice(0, 10)"><a ng-click="setTracklistArtist(artist.name)">{{ artist.name }}</a></li>
+      </ul>
+      </div><!-- /.column -->
+      <div class="column">
+      <h2>Albums</h2>
+      <ul>
+        <li ng-repeat="album in result.albums.slice(0, 10)"><a ng-click="setTracklistAlbum(album.uri)">{{ album.name }} -- {{ album.artists[0].name }}</a></li>
+      </ul>
+      </div><!-- /.column -->
+    </div><!-- /#search -->
+
+    </div><!-- /#right-col -->
+
+    <div id="bottom-bar" class="border">
+    <div id="playback" ng-controller="playbackController">
+      <p>{{ state }}</p>
+      <p>Currently playing: {{ currentTrack.name }} by {{ currentTrack.artists[0].name }} from {{ currentTrack.album.name }}</p>
+      <p><a ng-click="showTracklist()">Show tracklist</a></p>
+      <ul id="controls">
         <li><a ng-click="stop()">Stop</a></li>
         <li><a ng-click="play()">Play</a></li>
         <li><a ng-click="pause()">Pause</a></li>
         <li><a ng-click="next()">Next</a></li>
         <li><a ng-click="previous()">Previous</a></li>
       </ul>
-    </div>
-    <div id="search" ng-controller="searchController">
-      <form ng-submit="search()">
-        <input name="query" ng-model="query">
-        <input type="submit" value="Search">
-      </form>
-      <h2>Artists</h2>
-      <ul>
-        <li ng-repeat="artist in result.artists.slice(0, 10)">{{ artist.name }}</li>
-      </ul>
-      <h2>Albums</h2>
-      <ul>
-        <li ng-repeat="album in result.albums.slice(0, 10)">{{ album.name }} -- {{ album.artists[0].name }}</li>
-      </ul>
-      <h2>Tracks</h2>
-      <ul>
-        <li ng-repeat="track in result.tracks.slice(0, 10)"><a ng-click="changeTrack(track)">{{ track.name }} -- {{ track.artists[0].name }} ({{ track.album.name }})</li>
-      </ul>
-    </div>
+    </div><!-- /#playback -->
+    </div><!-- /#bottom-bar -->
   </body>
 </html
 
