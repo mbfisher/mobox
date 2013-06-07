@@ -2,16 +2,21 @@
   <head>
     <script type="text/javascript" src="/mopidy/mopidy.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
-    <script type="text/javascript" src="/client.js"></script>
+    <script type="text/javascript" src="/js/client.js"></script>
+    <script type="text/javascript" src="/js/services.js"></script>
+    <script type="text/javascript" src="/js/controllers/playbackController.js"></script>
+    <script type="text/javascript" src="/js/controllers/playlistController.js"></script>
+    <script type="text/javascript" src="/js/controllers/searchController.js"></script>
+    <script type="text/javascript" src="/js/controllers/libraryController.js"></script>
 
-    <link rel="stylesheet" href="/normalize.css">
-    <link rel="stylesheet/less" href="/app.less">
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet/less" href="/css/app.less">
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.3.3/less.min.js"></script>
   </head>
   <body>
     <div id="top-bar" class="border">
-    <h1>Mopidy Web Client</h1>
+    <h1>mobox</h1>
     </div><!-- /#top-bar -->
 
     <div id="left-col" class="main-col border">
@@ -66,16 +71,26 @@
 
     <div id="bottom-bar" class="border">
     <div id="playback" ng-controller="playbackController">
-      <p>{{ state }}</p>
-      <p>Currently playing: {{ currentTrack.name }} by {{ currentTrack.artists[0].name }} from {{ currentTrack.album.name }}</p>
       <p><a ng-click="showTracklist()">Show tracklist</a></p>
       <ul id="controls">
-        <li><a ng-click="stop()">Stop</a></li>
-        <li><a ng-click="play()">Play</a></li>
-        <li><a ng-click="pause()">Pause</a></li>
-        <li><a ng-click="next()">Next</a></li>
-        <li><a ng-click="previous()">Previous</a></li>
+        <li><a class="playback-control" id="stop" ng-click="stop()" ng-hide="state == 'stopped'"></a></li>
+        <li><a class="playback-control"id="play" ng-click="play()" ng-hide="state == 'playing'"></a></li>
+        <li><a class="playback-control"id="pause" ng-click="pause()" ng-show="state == 'playing'"></a></li>
+        <li><a class="playback-control"id="previous" ng-click="previous()"></a></li>
+        <li><a class="playback-control"id="next" ng-click="next()"></a></li>
       </ul>
+      <div id="progress">
+        {{ currentProgress }} / {{ progressToTime(currentTrack.length) }}
+      </div>
+      <div id="now-playing">
+        <div id="now-playing-info">
+        <p id="now-playing-track">{{ currentTrack.name }}</p>
+        <p id="now-playing-artist">{{ currentTrack.artists[0].name }}</p>
+        <p id="now-playing-album">{{ currentTrack.album.name }}</p>
+        </div>
+        <div id="now-playing-artwork">Artwork</div>
+        <div class="clear-both"></div>
+      </div>
     </div><!-- /#playback -->
     </div><!-- /#bottom-bar -->
   </body>
