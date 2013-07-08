@@ -11,6 +11,7 @@ function playbackController($scope, $tracklist) {
     return m+':'+s;
   };
   var setCurrentProgress = function(progress) {
+    $scope.currentProgressInt = progress;
     $scope.currentProgress = $scope.progressToTime(progress);
     $scope.$apply();
     return $scope.currentProgress;
@@ -18,7 +19,7 @@ function playbackController($scope, $tracklist) {
   var int = window.setInterval(function() {
     if ( online && $scope.state == 'playing' ) {
       mopidy.playback.getTimePosition().then(function(data) {
-        console.log(setCurrentProgress(data));
+        setCurrentProgress(data);
       });
     }
   }, 1000);
@@ -34,6 +35,10 @@ function playbackController($scope, $tracklist) {
     $scope.$apply();
     return new_state;
   }
+
+  $scope.progressPercentage = function() {
+    return online && $scope.currentTrack ? $scope.currentProgressInt / $scope.currentTrack.length * 100 : 0;
+  };
 
   $scope.next = function() {
     mopidy.playback.next();

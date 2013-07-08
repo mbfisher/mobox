@@ -71,7 +71,6 @@
 
     <div id="bottom-bar" class="border">
     <div id="playback" ng-controller="playbackController">
-      <p><a ng-click="showTracklist()">Show tracklist</a></p>
       <ul id="controls">
         <li><a class="playback-control" id="stop" ng-click="stop()" ng-hide="state == 'stopped'"></a></li>
         <li><a class="playback-control"id="play" ng-click="play()" ng-hide="state == 'playing'"></a></li>
@@ -80,6 +79,9 @@
         <li><a class="playback-control"id="next" ng-click="next()"></a></li>
       </ul>
       <div id="progress">
+        <div id="progress-outer">
+          <div id="progress-inner" style="width: {{progressPercentage()}}%"></div>
+        </div>
         {{ currentProgress }} / {{ progressToTime(currentTrack.length) }}
       </div>
       <div id="now-playing">
@@ -87,8 +89,9 @@
         <p id="now-playing-track">{{ currentTrack.name }}</p>
         <p id="now-playing-artist">{{ currentTrack.artists[0].name }}</p>
         <p id="now-playing-album">{{ currentTrack.album.name }}</p>
+        <p><a ng-click="showTracklist()">Show tracklist</a></p>
         </div>
-        <div id="now-playing-artwork">Artwork</div>
+        <div id="now-playing-artwork">Art</div>
         <div class="clear-both"></div>
       </div>
     </div><!-- /#playback -->
