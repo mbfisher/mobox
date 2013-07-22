@@ -1,0 +1,69 @@
+<div id="search" ng-controller="SearchController">
+  <form ng-submit="search()">
+    <input name="query" ng-model="query">
+    <input type="submit" value="Search">
+  </form>
+
+  <div id="search-loading" class="loading"></div>
+
+  <div id="result" ng-hide="show.artist || show.album">
+    <div id="artists" ng-show="result.artists">
+      <h2>Artists</h2>
+      <ul class="thumbs">
+        <li ng-repeat="artist in result.artists.slice(0, 10)"><a data-uri="{{ artist.uri }}" title="{{ artist.name }}" ng-click="doShow('artist', artist.uri, {title: artist.name})">{{ artist.name|truncate:30 }}</a></li>
+      </ul>
+    </div><!-- /#artists -->
+    <div id="albums" ng-show="result.albums">
+      <h2>Albums</h2>
+      <ul class="thumbs">
+        <li ng-repeat="album in result.albums.slice(0, 10)">
+        <a data-uri="{{ album.uri }}" title="{{ album.name }}" ng-click="doShow('album', album.uri, album)">{{ album.name|truncate:40 }}</a>
+          <small><a ng-click="doShow('artist', album.artists[0].uri, {meta: album.artists[0].name})">{{ album.artists[0].name|truncate:20 }}</small></a>
+        </li>
+      </ul>
+    </div><!-- /#albums -->
+    <div id="tracks" ng-show="result.tracks">
+      <h2>Tracks</h2>
+      <table class="table table-striped">
+        <tbody>
+        <tr ng-repeat="track in result.tracks.slice(0, 50)">
+          <td>{{ track.name }}</td>
+          <td>{{ track.artists[0].name }}</td>
+          <td>{{ track.album.name }}</td>
+          <td><a ng-click="addToQueue(track)">Add</a></td>
+        </tr>
+        </tbody>
+      </table>
+    </div><!-- /#tracks -->
+  </div><!-- /#result -->
+
+  <div id="show_artist" ng-show="show.artist">
+    <h3>{{ show.artist.meta.title }}</h3><a ng-click="show.artist = false">Close</a>
+    <table class="table table-striped">
+      <tbody>
+      <tr ng-repeat="track in show.artist.data.slice(0, 100)">
+        <td>{{ track.name }}</td>
+        <td>{{ track.artists[0].name }}</td>
+        <td>{{ track.album.name }}</td>
+        <td><a ng-click="addToQueue(track)">Add</a></td>
+      </tr>
+      </tbody>
+    </table>
+  </div><!-- /#show_artist -->
+
+  <div id="show_album" ng-show="show.album">
+    <h3>{{ show.album.meta.name }}</h3><p>{{ show.album.meta.artists[0].name }}</p>
+    <a ng-click="addAlbum(show.album.data)">Add to Queue</a>
+    <a ng-click="show.album = false">Close</a>
+    <table class="table table-striped">
+      <tbody>
+      <tr ng-repeat="track in show.album.data">
+        <td>{{ track.name }}</td>
+        <td>{{ track.artists[0].name }}</td>
+        <td>{{ track.album.name }}</td>
+        <td><a ng-click="addToQueue(track)">Add</a></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div><!-- /#search -->

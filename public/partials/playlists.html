@@ -1,0 +1,19 @@
+<div id="playlists" ng-hide="show">
+<ul>
+  <li ng-repeat="playlist in playlists" ng-click="setShow(playlist)"><a>{{ playlist.name }}</a></li>
+</ul>
+</div><!-- /$playlists -->
+<div id="playlist" ng-show="show">
+<h2>{{ show.name }}</h2>
+<a ng-click="setShow(false)">Close</a>
+<table class="table table-striped">
+  <tbody>
+  <tr ng-repeat="track in show.tracks">
+    <td>{{ track.name }}</td>
+    <td>{{ track.artists[0].name }}</td>
+    <td>{{ track.album.name }}</td>
+    <td><a ng-click="addToQueue(track)">Add</a></td>
+  </tr>
+  </tbody>
+</table>
+</div><!-- /#playlist -->

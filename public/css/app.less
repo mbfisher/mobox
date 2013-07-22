@@ -1,0 +1,57 @@
+/*** LESS ***/
+
+@blue1: #6D89D5;
+@blue2: #476DD5;
+@blue3: #133CAC;
+@blue4: #2B4281;
+@blue5: #062279;
+@section_icons_img: 'https://play.spotify.edgekey.net/client/2273542/images/section-icons.png';
+
+/*** RESET ***/
+
+* { -webkit-margin-before: 0; -webkit-margin-after: 0; -webkit-margin-start: 0; -webkit-margin-end: 0; -webkit-padding-start: 0; -webkit-padding-end: 0; }
+ul, ol { margin: 0; }
+ul li, ol li { list-style: none; }
+
+
+/*** GLOBAL ***/
+
+.clear-both { clear: both; }
+a { cursor: pointer; }
+
+/*** LAYOUT ***/
+
+.section { padding: 10px; }
+#main { overflow: auto; border-left: 1px solid gray; border-right: 1px solid gray; height: 650px; }
+
+/*** MENU ***/
+#nav { padding-top: 20px; }
+#nav li { margin-bottom: 20px; }
+#nav li a { padding-top: 40px; text-align: center; display: block; width: 70px; height: 20px; }
+#nav li[data-nav-view=search] a { background: url(@section_icons_img) 12px 0; }
+#nav li[data-nav-view=search].active a { background: url(@section_icons_img) 12px -60px; }
+#nav li[data-nav-view=playlists] a { background: url(@section_icons_img) -183px 0; }
+#nav li[data-nav-view=playlists].active a { background: url(@section_icons_img) -183px -60px; }
+#nav li[data-nav-view=queue] a { background: url(@section_icons_img) -240px 0; }
+#nav li[data-nav-view=queue].active a { background: url(@section_icons_img) -240px -60px; }
+
+/*** SEARCH ***/
+
+.thumbs li { display: inline-block; width: 100px; height: 100px; border: 1px solid gray; margin: 5px; padding: 5px; border-radius: 5px; }
+.thumbs li a { display: block; }
+
+/*** PLAYBACK ***/
+
+#controls li { display: inline-block; }
+#controls .playback-control { display: inline-block; width: 24px; height: 24px; background-repeat: no-repeat; background-position: right top; background-size: 24px 24px; }
+.playback-control#stop { background-image: url(/img/stop.png); }
+.playback-control#play { background-image: url(/img/play.png); }
+.playback-control#pause { background-image: url(/img/pause.png); }
+.playback-control#next { background-image: url(/img/next.png); }
+.playback-control#previous { background-image: url(/img/previous.png); }
+
+#progress-outer { width: 100%; border: 1px solid gray; height: 5px; }
+#progress-inner { width: 0%; height: 100%; background: @blue3; }
+#progress-time { text-align: right; }
+
+#now-playing-info p { margin: 0; text-align: right; }

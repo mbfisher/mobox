@@ -1,0 +1,23 @@
+<div id="now-playing">
+  <img id="now-playing-artwork" alt="Cover art">
+  <div id="now-playing-info">
+    <p id="now-playing-track">{{ currentTrack.name }}</p>
+    <p id="now-playing-artist">{{ currentTrack.artists[0].name }}</p>
+    <p id="now-playing-album">{{ currentTrack.album.name }}</p>
+  </div>
+</div><!-- /#now-playing -->
+
+<div id="progress">
+  <div id="progress-outer">
+    <div id="progress-inner" style="width: {{progressPercentage()}}%"></div>
+  </div>
+  <div id="progress-time">{{ currentProgress }} / {{ progressToTime(currentTrack.length) }}</div>
+</div><!-- /#progress -->
+
+<ul id="controls">
+  <li><a class="playback-control" id="stop" ng-click="stop()" ng-hide="state == 'stopped'"></a></li>
+  <li><a class="playback-control"id="play" ng-click="play()" ng-hide="state == 'playing'"></a></li>
+  <li><a class="playback-control"id="pause" ng-click="pause()" ng-show="state == 'playing'"></a></li>
+  <li><a class="playback-control"id="previous" ng-click="previous()"></a></li>
+  <li><a class="playback-control"id="next" ng-click="next()"></a></li>
+</ul><!-- /#controls -->

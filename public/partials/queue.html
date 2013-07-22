@@ -1,0 +1,10 @@
+<a ng-click="updateQueue()">Refresh</a>
+<table class="table table-striped">
+  <tbody>
+  <tr ng-repeat="track in queue">
+    <td>{{ track.name }}</td>
+    <td>{{ track.artists[0].name }}</td>
+    <td>{{ track.album.name }}</td>
+  </tr>
+  </tbody>
+</table>
