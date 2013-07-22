@@ -1,6 +1,16 @@
 'use strict';
 
-var app = angular.module('mopidyWebClient', ['filters']);
+var consoleError = console.error.bind(console);
+var config;
+var app;
+var mopidy;
+var online;
+
+$.ajax('/config.json', {async: false}).done(function(data) {
+  config = data;
+});
+
+app = angular.module('mopidyWebClient', ['filters']);
 app.config(['$routeProvider', '$locationProvider',  function ($routeProvider, $locationProvider) {
   $routeProvider
     .when('/', {templateUrl: 'partials/queue.html', controller: QueueController })
@@ -11,52 +21,34 @@ app.config(['$routeProvider', '$locationProvider',  function ($routeProvider, $l
   $locationProvider.html5Mode(true);
 }]);
 
-angular.module('filters', []).
-    filter('truncate', function () {
-        return function (text, length, end) {
-            if (isNaN(length))
-                length = 30;
- 
-            if (end === undefined)
-                end = "...";
- 
-            if (text.length <= length || text.length - end.length <= length) {
-                return text;
-            }
-            else {
-                return String(text).substring(0, length-end.length) + end;
-            }
- 
-        };
-    });
+angular.module('filters', []).filter('truncate', function () {
+  return function (text, length, end) {
+    if (isNaN(length)) length = 30;
 
-var mopidy = Mopidy({
-  webSocketUrl: "ws://10.192.115.42:6680/mopidy/ws/"
+    if (end === undefined) end = "...";
+
+    if (text.length <= length || text.length - end.length <= length) {
+      return text;
+    }
+    else {
+      return String(text).substring(0, length-end.length) + end;
+    }
+  };
 });
 
+mopidy = Mopidy(config.mopidy);
+
 //mopidy.on(console.log.bind(console));
-var online = false;
+online = false;
 mopidy.on('state:online', function() {
   online = true;
   bootstrap();
 });
 
-var consoleError = console.error.bind(console);
-var mkTlTrack = function(track) {
-  delete track['$$hashKey'];
-  var tl_track = {
-    '__model__': 'TlTrack',
-    'track': track
-  };
-  return tl_track;
-};
-
-var ACCUMULATE_TO_PLAYLIST = 'The Marketing Lab';
-
 function bootstrap() {
   $('#connecting').hide();
   $('#app').show();
- /* if ( typeof(ACCUMULATE_TO_PLAYLIST) !== 'undefined' ) {
+  /* if ( typeof(ACCUMULATE_TO_PLAYLIST) !== 'undefined' ) {
     console.log("Getting accumulator...");
     mopidy.playlists.getPlaylists().then(function(data) {
       var playlist;
