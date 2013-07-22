@@ -13,7 +13,7 @@ app.factory('$queue', function($rootScope) {
   };
 
   $queue.add = function(tracks) {
-    var tracks = typeof tracks.length == 'undefined' ? [tracks] : tracks;
+    var tracks = tracks instanceof Object ? [tracks] : tracks;
     mopidy.tracklist.add(angular.fromJson(angular.toJson(tracks))).then(function() {
       alert('Added!');
       $queue.update();

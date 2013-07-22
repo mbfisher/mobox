@@ -7,15 +7,36 @@ function QueueController($scope, $queue) {
     $scope.$apply();
   });
 
-  mopidy.on('state:online', $queue.update);
-  online && $queue.update();
+  function setNowPlaying(uri) {
+    $('tr.queued-track').removeClass('info');
+    $('tr.queued-track').each(function() {
+      if ( $(this).attr('data-uri') == uri ) {
+        $(this).addClass('info');
+        return;
+      }
+    });
+  }
+
+  mopidy.on('event:trackPlaybackStarted', function(data) {
+    setNowPlaying(data.tl_track.track.uri);
+  });
+
+  function bootstrap() {
+    $queue.update();
+    mopidy.playback.getCurrentTrack().then(function(data) {
+      setNowPlaying(data.uri);
+    });
+  }
+  mopidy.on('state:online', bootstrap);
+  if ( online ) bootstrap();
 }
 
 function SearchController($scope, $queue) {
   $scope.show = { artist: false, album: false };
-  $scope.test = 'TEST';
 
   $scope.search = function() {
+    $('#search-loading').show();
+    $scope.show = { artist: false, album: false };
     var self = this;
     $scope.result = false;
     if ( self.query ) {
@@ -24,6 +45,7 @@ function SearchController($scope, $queue) {
           if ( data[i].uri.indexOf('spotify:search') === 0 ) {
             $scope.result = data[i];
             $scope.$apply();
+            $('#search-loading').hide();
             break;
           }
         }
@@ -47,6 +69,7 @@ function PlaybackController($scope) {
   /*** Playback actions ***/
   $scope.next = function() {
     mopidy.playback.next();
+    $scope.state != 'playing' && mopidy.playback.play();
   };
   $scope.play = function() {
     mopidy.playback.play();
@@ -67,7 +90,6 @@ function PlaybackController($scope) {
   }, consoleError);
 
   mopidy.on('event:playbackStateChanged', function(data) {
-    console.log(data);
     setState(data.new_state);
   }, consoleError);
 
@@ -137,9 +159,11 @@ function PlaylistsController($scope) {
   };
 
   $scope.getPlaylists = function() {
+    $('#playlists-loading').show();
     mopidy.playlists.getPlaylists().then(function(data) {
       $scope.playlists = data;
       $scope.$apply();
+      $('#playlists-loading').hide();
     }, consoleError);
   };
 

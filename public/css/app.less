@@ -18,6 +18,7 @@ ul li, ol li { list-style: none; }
 
 .clear-both { clear: both; }
 a { cursor: pointer; }
+.loading { background: url(https://play.spotify.edgekey.net/client/2273542/images/loading_throbber.gif); width: 32px; height: 32px; display: none; }
 
 /*** LAYOUT ***/
 
@@ -37,7 +38,8 @@ a { cursor: pointer; }
 
 /*** SEARCH ***/
 
-.thumbs li { display: inline-block; width: 100px; height: 100px; border: 1px solid gray; margin: 5px; padding: 5px; border-radius: 5px; }
+h2 { clear: both; }
+.thumbs li { float: left; width: 100px; height: 100px; border: 1px solid gray; margin: 5px; padding: 5px; border-radius: 5px; overflow: hidden; }
 .thumbs li a { display: block; }
 
 /*** PLAYBACK ***/

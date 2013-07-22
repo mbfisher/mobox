@@ -8,5 +8,5 @@ $(document).ready(function() {
     setNavView($(this).parent('li').attr('data-nav-view'));
   });
 
-  setNavView(window.location.pathname.replace(/^\//, ''));
+  setNavView(window.location.pathname.replace(/^\//, '') || 'queue');
 });

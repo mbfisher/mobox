@@ -11,4 +11,4 @@ app.get('*', function(req, res) {
   res.send(html);
 });
 
-app.listen(7000, '127.0.0.1');
+app.listen(7000, '0.0.0.0');

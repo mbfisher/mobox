@@ -6,7 +6,8 @@ app.config(['$routeProvider', '$locationProvider',  function ($routeProvider, $l
     .when('/', {templateUrl: 'partials/queue.html', controller: QueueController })
     .when('/queue', {templateUrl: 'partials/queue.html', controller: QueueController })
     .when('/playlists', {templateUrl: 'partials/playlists.html', controller: PlaylistsController})
-    .when('/search', {templateUrl: 'partials/search.html', controller: SearchController});
+    .when('/search', {templateUrl: 'partials/search.html', controller: SearchController})
+    .otherwise({redirectTo: '/'});
   $locationProvider.html5Mode(true);
 }]);
 
@@ -30,7 +31,7 @@ angular.module('filters', []).
     });
 
 var mopidy = Mopidy({
-  webSocketUrl: "ws://localhost:6680/mopidy/ws/"
+  webSocketUrl: "ws://10.192.115.42:6680/mopidy/ws/"
 });
 
 //mopidy.on(console.log.bind(console));
