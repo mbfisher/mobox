@@ -27,9 +27,23 @@ function playlistController($scope, $tracklist) {
   }
 
   $scope.addToPlaylist = function(track) {
-      mopidy.tracklist.add(angular.fromJson(angular.toJson([track]))).then(function() {
-        showTracklist();
+    /*if ( typeof(ACCUMULATE_TO_PLAYLIST) == 'object' && '__model__' in ACCUMULATE_TO_PLAYLIST && ACCUMULATE_TO_PLAYLIST.__model__ == 'Playlist' ) {
+      console.log("Adding to accumulator");
+      if ( !('tracks' in ACCUMULATE_TO_PLAYLIST) ) {
+        ACCUMULATE_TO_PLAYLIST.tracks = [];
+      }
+      ACCUMULATE_TO_PLAYLIST.tracks.push(track);
+      mopidy.playlists.save(ACCUMULATE_TO_PLAYLIST).then(function(data) {
+        ACCUMULATE_TO_PLAYLIST = data;
+        console.log("Added to accumulator", data);
       }, consoleError);
+    }
+    else {
+      console.log("Skipping accumulator");
+    }*/
+    mopidy.tracklist.add(angular.fromJson(angular.toJson([track]))).then(function() {
+      showTracklist();
+    }, consoleError);
   };
 
   $scope.$on('updateTracklist', function() {
