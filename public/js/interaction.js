@@ -8,7 +8,7 @@ $(document).ready(function() {
     setNavView($(this).parent('li').attr('data-nav-view'));
   });
 
-  setNavView(window.location.pathname.replace(/^\//, '') || 'queue');
+  setNavView(window.location.pathname.replace(/^\/app\//, '') || 'queue');
 
   $('#playback').on('click', '#loggle', function() {
     $('#log').toggle();

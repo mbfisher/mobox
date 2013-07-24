@@ -6,18 +6,28 @@ var app;
 var mopidy;
 var online;
 
-$.ajax('/config.json', {async: false}).done(function(data) {
+$.ajax('/static/config.json', {async: false}).done(function(data) {
   config = data;
 });
+
+var cookie = $.cookie('mobox');
+if ( cookie !== null ) {
+  cookie = JSON.parse(cookie);
+}
+else {
+  cookie = {};
+  cookie.user = prompt('Enter your name');
+  $.cookie('mobox', JSON.stringify(cookie));
+}
 
 app = angular.module('mopidyWebClient', ['filters']);
 app.config(['$routeProvider', '$locationProvider',  function ($routeProvider, $locationProvider) {
   $routeProvider
-    .when('/', {templateUrl: 'partials/queue.html', controller: QueueController })
-    .when('/queue', {templateUrl: 'partials/queue.html', controller: QueueController })
-    .when('/playlists', {templateUrl: 'partials/playlists.html', controller: PlaylistsController})
-    .when('/search', {templateUrl: 'partials/search.html', controller: SearchController})
-    .otherwise({redirectTo: '/'});
+    .when('/app/', {templateUrl: '/static/partials/queue.html', controller: QueueController })
+    .when('/app/queue', {templateUrl: '/static/partials/queue.html', controller: QueueController })
+    .when('/app/playlists', {templateUrl: '/static/partials/playlists.html', controller: PlaylistsController})
+    .when('/app/search', {templateUrl: '/static/partials/search.html', controller: SearchController})
+    .otherwise({redirectTo: '/app/'});
   $locationProvider.html5Mode(true);
 }]);
 
