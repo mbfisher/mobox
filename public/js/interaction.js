@@ -9,4 +9,8 @@ $(document).ready(function() {
   });
 
   setNavView(window.location.pathname.replace(/^\//, '') || 'queue');
+
+  $('#playback').on('click', '#loggle', function() {
+    $('#log').toggle();
+  });
 });
