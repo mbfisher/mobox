@@ -6,7 +6,7 @@ app.factory('$queue', function($rootScope) {
   $queue.tracks = [];
 
   $queue.update = function() {
-    mopidy.tracklist.getTracks().then(function(data) {
+    mopidy.tracklist.getTlTracks().then(function(data) {
       $queue.tracks = data;
       $rootScope.$broadcast('queueUpdated');
     });

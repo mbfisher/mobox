@@ -2,10 +2,11 @@
 <a ng-click="refresh()">Refresh</a>
 <table class="table table-striped">
   <tbody>
-  <tr ng-repeat="track in queue" class="queued-track" data-uri="{{ track.uri }}">
-    <td>{{ track.name }}</td>
-    <td>{{ track.artists[0].name }}</td>
-    <td>{{ track.album.name }}</td>
+  <tr ng-repeat="tltrack in queue" class="queued-track" data-uri="{{ tltrack.track.uri }}">
+    <td>{{ tltrack.track.name }}</td>
+    <td>{{ tltrack.track.artists[0].name }}</td>
+    <td>{{ tltrack.track.album.name }}</td>
+    <td><a ng-click="changeTrack(tltrack.track.uri)">Change</a></td>
   </tr>
   </tbody>
 </table>

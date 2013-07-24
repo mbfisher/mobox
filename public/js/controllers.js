@@ -22,6 +22,15 @@ function QueueController($scope, $queue) {
     setNowPlaying(data.tl_track.track.uri);
   });
 
+  $scope.changeTrack = function(uri) {
+    for ( var i in $queue.tracks ) {
+      var track = $queue.tracks[i].track;
+      if ( track.uri == uri ) {
+        mopidy.playback.changeTrack(angular.fromJson(angular.toJson($queue.tracks[i]))).then(function(data) {}, consoleError);
+      }
+    }
+  }
+
   function bootstrap() {
     $queue.update();
     mopidy.playback.getCurrentTrack().then(function(data) {
