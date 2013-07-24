@@ -1,7 +1,8 @@
 'use strict';
 
 function QueueController($scope, $queue) {
-  $scope.updateQueue = $queue.update;
+  $scope.refresh = bootstrap;
+
   $scope.$on('queueUpdated', function(queue) {
     $scope.queue = $queue.tracks;
     $scope.$apply();
