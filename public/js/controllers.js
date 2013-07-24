@@ -24,12 +24,25 @@ function QueueController($scope, $queue) {
 
   $scope.changeTrack = function(uri) {
     for ( var i in $queue.tracks ) {
-      var track = $queue.tracks[i].track;
-      if ( track.uri == uri ) {
-        mopidy.playback.changeTrack(angular.fromJson(angular.toJson($queue.tracks[i]))).then(function(data) {}, consoleError);
+      var tltrack = $queue.tracks[i];
+      if ( tltrack.track.uri == uri ) {
+        var tmp = tltrack.track.queued_by;
+        delete tltrack.track.queued_by;
+        mopidy.playback.changeTrack(angular.fromJson(angular.toJson(tltrack))).then(function(data) {}, consoleError);
+        mopidy.playback.play();
+        tltrack.track.queued_by = tmp;
+        break;
       }
     }
   }
+
+  $scope.removeTrack = function(uri) {
+    mopidy.tracklist.remove({uri: uri});
+  };
+
+  mopidy.on('event:tracklistChanged', function() {
+    $queue.update();
+  });
 
   function bootstrap() {
     $queue.update();

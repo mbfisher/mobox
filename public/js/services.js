@@ -32,6 +32,9 @@ app.factory('$queue', function($rootScope) {
 
   $queue.add = function(tracks) {
     var tracks = tracks instanceof Object ? [tracks] : tracks;
+    for ( var i in tracks ) {
+      delete tracks[i].queued_by;
+    }
     mopidy.tracklist.add(angular.fromJson(angular.toJson(tracks))).then(function() {
       for ( var i in tracks ) {
         var track = tracks[i];

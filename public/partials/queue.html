@@ -16,7 +16,7 @@
     <td>{{ tltrack.track.artists[0].name }}</td>
     <td>{{ tltrack.track.album.name }}</td>
     <td>{{ tltrack.track.queued_by }}</td>
-    <td><a ng-click="changeTrack(tltrack.track.uri)">Play</a></td>
+    <td><a ng-click="changeTrack(tltrack.track.uri)">Play</a> | <a ng-click="removeTrack(tltrack.track.uri)">Remove</a></td>
   </tr>
   </tbody>
 </table>

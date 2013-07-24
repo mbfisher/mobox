@@ -1,9 +1,15 @@
 {
+  "mobox": {
+    "host": "0.0.0.0",
+    "port": "7000",
+    "loggers": {
+      "socket.io": 1
+    }
+  },
   "mopidy": {
     "webSocketUrl": "ws://10.192.115.42:6680/mopidy/ws/"
   },
   "mongo": {
-    "db": "mobox",
-    "apiKey": "gyIqp__z3i-CysTvRwHEF9mJF8I0kaE7"
+    "uri": "mongodb://127.0.0.1:27017"
   }
 }
