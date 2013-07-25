@@ -10,13 +10,24 @@ $.ajax('/static/config.json', {async: false}).done(function(data) {
   config = data;
 });
 
+function getUser(msg) {
+  var user = prompt((typeof msg !== 'undefined' ? msg+"\n" : '')+'Enter your name');
+  if ( user.match(/[^\w]/) ) {
+    user = getUser('Invalid name! Only word chars');
+  }
+  return user;
+}
+
 var cookie = $.cookie('mobox');
 if ( cookie !== null ) {
   cookie = JSON.parse(cookie);
+  if ( !('user' in cookie) || !cookie.user.match(/^\w+$/) ) {
+    cookie = null;
+  }
 }
-else {
+if ( !cookie ) {
   cookie = {};
-  cookie.user = prompt('Enter your name');
+  cookie.user = getUser();
   $.cookie('mobox', JSON.stringify(cookie));
 }
 
@@ -31,20 +42,31 @@ app.config(['$routeProvider', '$locationProvider',  function ($routeProvider, $l
   $locationProvider.html5Mode(true);
 }]);
 
-angular.module('filters', []).filter('truncate', function () {
-  return function (text, length, end) {
-    if (isNaN(length)) length = 30;
+angular.module('filters', [])
+  .filter('truncate', function () {
+    return function (text, length, end) {
+      if (isNaN(length)) length = 30;
 
-    if (end === undefined) end = "...";
+      if (end === undefined) end = "...";
 
-    if (text.length <= length || text.length - end.length <= length) {
-      return text;
-    }
-    else {
-      return String(text).substring(0, length-end.length) + end;
-    }
-  };
-});
+      if (text.length <= length || text.length - end.length <= length) {
+        return text;
+      }
+      else {
+        return String(text).substring(0, length-end.length) + end;
+      }
+    };
+  }).filter('ms2time', function() {
+    return function(ms) {
+      if ( typeof ms === 'undefined' || ms === 0 ) return '0:00';
+      var m = Math.floor((ms/1000) / 60);
+      var s = Math.floor((ms/1000) % 60);
+      if ( s < 10 ) {
+        s = '0'+s;
+      }
+      return m+':'+s;
+    };
+  });
 
 mopidy = Mopidy(config.mopidy);
 

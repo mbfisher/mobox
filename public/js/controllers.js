@@ -40,12 +40,14 @@ function QueueController($scope, $queue) {
     mopidy.tracklist.remove({uri: uri});
   };
 
-  mopidy.on('event:tracklistChanged', function() {
-    $queue.update();
-  });
+  $scope.clearQueue = function() {
+    mopidy.tracklist.clear;
+  };
+
+  mopidy.on('event:tracklistChanged', $queue.refresh);
 
   function bootstrap() {
-    $queue.update();
+    $queue.refresh();
     mopidy.playback.getCurrentTrack().then(function(data) {
       setNowPlaying(data.uri);
     });
@@ -126,19 +128,8 @@ function PlaybackController($scope) {
     }
   };
 
-  $scope.progressToTime = function(progress) {
-    progress = progress / 1000;
-    var m = Math.floor(progress /60);
-    var s = Math.floor(progress % 60);
-    if ( s < 10 ) {
-      s = '0'+s;
-    }
-    return m+':'+s;
-  };
-
   var setCurrentProgress = function(progress) {
-    $scope.currentProgressInt = progress;
-    $scope.currentProgress = $scope.progressToTime(progress);
+    $scope.currentProgress = progress;
     $scope.$apply();
     return $scope.currentProgress;
   };

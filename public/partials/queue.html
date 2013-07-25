@@ -1,9 +1,10 @@
 <h1>Queue</h1>
-<a ng-click="refresh()">Refresh</a>
+<a ng-click="refresh()">Refresh</a> | <a ng-click="clearQueue()">Clear</a>
 <table class="table table-striped">
   <thead>
     <tr>
       <th>Track</th>
+      <th>Length</th>
       <th>Artist</th>
       <th>Album</th>
       <th>Queued by</th>
@@ -13,6 +14,7 @@
   <tbody>
   <tr ng-repeat="tltrack in queue" class="queued-track" data-uri="{{ tltrack.track.uri }}">
     <td>{{ tltrack.track.name }}</td>
+    <td>{{ tltrack.track.length|ms2time }}</td>
     <td>{{ tltrack.track.artists[0].name }}</td>
     <td>{{ tltrack.track.album.name }}</td>
     <td>{{ tltrack.track.queued_by }}</td>

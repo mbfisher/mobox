@@ -5,11 +5,12 @@ app.factory('$queue', function($rootScope) {
 
   $queue.tracks = [];
 
-  $queue.update = function() {
+  $queue.refresh = function() {
     mopidy.tracklist.getTlTracks().then(function(tltracks) {
       $.ajax('/db/plays', {
         type: 'GET',
         success: function(data) {
+          var again = false;
           for ( var i in tltracks ) {
             var track = tltracks[i].track;
             for ( var j in data ) {
@@ -20,18 +21,20 @@ app.factory('$queue', function($rootScope) {
             }
             if ( !('queued_by' in track) ) {
               track.queued_by = 'unknown';
+              again = true;
             }
             tltracks[i].track = track;
           }
           $queue.tracks = tltracks;
           $rootScope.$broadcast('queueUpdated');
+          if ( again ) $queue.refresh();
         }
       });
     });
   };
 
   $queue.add = function(tracks) {
-    var tracks = tracks instanceof Object ? [tracks] : tracks;
+    var tracks = tracks instanceof Array ? tracks : [tracks];
     for ( var i in tracks ) {
       delete tracks[i].queued_by;
     }
@@ -45,7 +48,7 @@ app.factory('$queue', function($rootScope) {
         });
       }
       alert('Added!');
-      $queue.update();
+      $queue.refresh();
     }, consoleError);
   };
 
