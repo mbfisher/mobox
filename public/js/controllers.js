@@ -121,7 +121,7 @@ function PlaybackController($scope) {
   /** Progress bar ***/
   $scope.progressPercentage = function() {
     if ( online && $scope.currentTrack ) {
-      return $scope.currentProgressInt / $scope.currentTrack.length * 100
+      return $scope.currentProgress / $scope.currentTrack.length * 100
     }
     else {
       return 0;
