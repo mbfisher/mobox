@@ -16,30 +16,59 @@ server.listen(config.mobox.port, config.mobox.host);
 app.use('/static', express.static(__dirname+'/public'));
 app.use(express.bodyParser());
 
-function mongo(clcn, success) {
+function mongo(collection, callbacks) {
   MongoClient.connect(config.mongo.uri, function(err, db) {
-    if ( err ) throw err;
-    var collection = db.collection(clcn);
-    return success(collection);
+    if ( err ) {
+      console.error('Mongo error', err);
+      return callbacks.error(err);
+    }
+    var _collection = db.collection(collection);
+    return callbacks.success(_collection);
   });
 }
 
 
 app.get('/db/plays', function(req, res) {
-  mongo('plays', function(collection) {
-    collection.find().toArray(function(err, docs) {
-      if ( err ) throw err;
-      res.send(docs);
-    });
+  mongo('plays', {
+    error: function(err) {
+      res.writeHead(500);
+      res.send(JSON.stringify({error: err}))
+    },
+    success: function(collection) {
+      collection.find().toArray(function(err, docs) {
+        if ( err ) res.send(JSON.stringify({success: false, error: err}));
+        res.send(docs);
+      });
+    }
   });
 });
 
 app.post('/db/plays', function(req, res) {
-  mongo('plays', function(collection) {
-    collection.insert([req.body], function(err, docs) {
-      if ( err ) throw err;
-      res.send('{"success": true}');
-    });
+  mongo('plays', {
+    error: function(err) {
+      res.writeHead(500);
+      res.send(JSON.stringify({error: err}))
+    },
+    success: function(collection) {
+      collection.insert([req.body], function(err, docs) {
+        if ( err ) res.send(JSON.stringify({success: false, error: err}));
+        res.end();
+      });
+    }
+  });
+});
+
+app.post('/db/plays/reset', function(req, res) {
+  mongo('plays', {
+    error: function(err) {
+      res.writeHead(500);
+      res.send(JSON.stringify({error: err}))
+    },
+    success: function(collection) {
+      collection.remove(function(err, docs) {
+        res.end();
+      });
+    }
   });
 });
 

@@ -41,7 +41,7 @@ function QueueController($scope, $queue) {
   };
 
   $scope.clearQueue = function() {
-    mopidy.tracklist.clear;
+    mopidy.tracklist.clear();
   };
 
   mopidy.on('event:tracklistChanged', $queue.refresh);

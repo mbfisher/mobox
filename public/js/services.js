@@ -27,7 +27,10 @@ app.factory('$queue', function($rootScope) {
           }
           $queue.tracks = tltracks;
           $rootScope.$broadcast('queueUpdated');
-          if ( again ) $queue.refresh();
+          //if ( again ) $queue.refresh();
+        },
+        error: function(data) {
+          alert(data.error);
         }
       });
     });
@@ -44,7 +47,7 @@ app.factory('$queue', function($rootScope) {
         $.ajax('/db/plays', {
           type: 'POST',
           data: { user: cookie.user, uri: track.uri },
-          error: console.error
+          error: function(data) { alert(data.error); }
         });
       }
       alert('Added!');
