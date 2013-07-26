@@ -10,12 +10,7 @@ function QueueController($scope, $queue) {
 
   function setNowPlaying(uri) {
     $('tr.queued-track').removeClass('info');
-    $('tr.queued-track').each(function() {
-      if ( $(this).attr('data-uri') == uri ) {
-        $(this).addClass('info');
-        return;
-      }
-    });
+    $('tr.queued-track[data-uri="'+uri+'"]').addClass('info');
   }
 
   mopidy.on('event:trackPlaybackStarted', function(data) {
@@ -47,9 +42,10 @@ function QueueController($scope, $queue) {
   mopidy.on('event:tracklistChanged', $queue.refresh);
 
   function bootstrap() {
-    $queue.refresh();
-    mopidy.playback.getCurrentTrack().then(function(data) {
-      setNowPlaying(data.uri);
+    $queue.refresh(function() {
+      mopidy.playback.getCurrentTrack().then(function(data) {
+        setNowPlaying(data.uri);
+      });
     });
   }
   mopidy.on('state:online', bootstrap);
@@ -66,14 +62,35 @@ function SearchController($scope, $queue) {
     $scope.result = false;
     if ( self.query ) {
       mopidy.library.search({'any':self.query}).then(function(data) {
+        var sources = {};
         for ( var i in data ) {
-          if ( data[i].uri.indexOf('spotify:search') === 0 ) {
-            $scope.result = data[i];
-            $scope.$apply();
-            $('#search-loading').hide();
-            break;
+          for ( var j in config.mobox.search_priority ) {
+            var re = new RegExp('^'+config.mobox.search_priority[j]);
+            if ( data[i].uri.match(re) ) {
+              var s = config.mobox.search_priority[j];
+              break;
+            }
+          }
+          sources[s] = data[i];
+        }
+
+        var result = {
+          albums: [],
+          artists: [],
+          tracks: []
+        };
+
+        for ( var s in config.mobox.search_priority ) {
+          s = config.mobox.search_priority[s];
+          for ( var m in Object.keys(result) ) {
+            m = Object.keys(result)[m];
+            if ( m in sources[s] ) result[m] = result[m].concat(sources[s][m]);
           }
         }
+
+        $scope.result = result;
+        $('#search-loading').hide();
+        $scope.$apply();
       });
     }
   };

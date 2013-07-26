@@ -5,7 +5,7 @@ app.factory('$queue', function($rootScope) {
 
   $queue.tracks = [];
 
-  $queue.refresh = function() {
+  $queue.refresh = function(callback) {
     mopidy.tracklist.getTlTracks().then(function(tltracks) {
       $.ajax('/db/plays', {
         type: 'GET',
@@ -26,8 +26,10 @@ app.factory('$queue', function($rootScope) {
             tltracks[i].track = track;
           }
           $queue.tracks = tltracks;
+
+          if ( callback ) callback();
+
           $rootScope.$broadcast('queueUpdated');
-          //if ( again ) $queue.refresh();
         },
         error: function(data) {
           alert(data.error);
