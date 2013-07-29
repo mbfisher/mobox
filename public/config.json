@@ -1,11 +1,11 @@
 {
   "mobox": {
-    "host": "127.0.0.1",
+    "host": "0.0.0.0",
     "port": "7000",
     "loggers": {
       "socket.io": 1
     },
-    "search_priority": [ "file", "spotify" ]
+    "search_priority": [ "google", "file", "spotify" ]
   },
   "mopidy": {
     "webSocketUrl": "ws://10.192.115.42:6680/mopidy/ws/"

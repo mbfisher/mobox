@@ -27,7 +27,7 @@ app.factory('$queue', function($rootScope) {
           }
           $queue.tracks = tltracks;
 
-          if ( callback ) callback();
+          if ( typeof callback !== 'undefined' ) callback();
 
           $rootScope.$broadcast('queueUpdated');
         },

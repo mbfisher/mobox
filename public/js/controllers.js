@@ -39,7 +39,9 @@ function QueueController($scope, $queue) {
     mopidy.tracklist.clear();
   };
 
-  mopidy.on('event:tracklistChanged', $queue.refresh);
+  mopidy.on('event:tracklistChanged', function() {
+    $queue.refresh();
+  });
 
   function bootstrap() {
     $queue.refresh(function() {
@@ -61,17 +63,16 @@ function SearchController($scope, $queue) {
     var self = this;
     $scope.result = false;
     if ( self.query ) {
-      mopidy.library.search({'any':self.query}).then(function(data) {
+      mopidy.library.search({'any':[self.query]}).then(function(data) {
         var sources = {};
         for ( var i in data ) {
           for ( var j in config.mobox.search_priority ) {
             var re = new RegExp('^'+config.mobox.search_priority[j]);
             if ( data[i].uri.match(re) ) {
-              var s = config.mobox.search_priority[j];
+              sources[config.mobox.search_priority[j]] = data[i];
               break;
             }
           }
-          sources[s] = data[i];
         }
 
         var result = {
@@ -84,7 +85,7 @@ function SearchController($scope, $queue) {
           s = config.mobox.search_priority[s];
           for ( var m in Object.keys(result) ) {
             m = Object.keys(result)[m];
-            if ( m in sources[s] ) result[m] = result[m].concat(sources[s][m]);
+            if ( s in sources && m in sources[s] ) result[m] = result[m].concat(sources[s][m]);
           }
         }
 
