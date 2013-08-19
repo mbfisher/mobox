@@ -19,8 +19,9 @@ app.use(express.bodyParser());
 function mongo(collection, callbacks) {
   MongoClient.connect(config.mongo.uri, function(err, db) {
     if ( err ) {
-      console.error('Mongo error', err);
-      return callbacks.error(err);
+      console.log(JSON.stringify(err));
+      console.error('Mongo Error', err[0]);
+      return callbacks.error(err[0]);
     }
     var _collection = db.collection(collection);
     return callbacks.success(_collection);
@@ -32,7 +33,7 @@ app.get('/db/plays', function(req, res) {
   mongo('plays', {
     error: function(err) {
       res.writeHead(500);
-      res.send(JSON.stringify({error: err}))
+      res.end(JSON.stringify({error: err}))
     },
     success: function(collection) {
       collection.find().toArray(function(err, docs) {
@@ -44,15 +45,21 @@ app.get('/db/plays', function(req, res) {
 });
 
 app.post('/db/plays', function(req, res) {
+  console.log('POST /db/plays', req.body);
+  var play = req.body
+  play.client = req.connection.remoteAddress;
   mongo('plays', {
     error: function(err) {
       res.writeHead(500);
-      res.send(JSON.stringify({error: err}))
+      res.end(JSON.stringify({error: err}))
     },
     success: function(collection) {
-      collection.insert([req.body], function(err, docs) {
-        if ( err ) res.send(JSON.stringify({success: false, error: err}));
-        res.end();
+      collection.insert(play, function(err, docs) {
+        if ( err ) {
+          res.writeHead(500);
+          res.end(JSON.stringify({error: err}));
+        }
+        res.send({success: true});
       });
     }
   });
@@ -73,7 +80,7 @@ app.post('/db/plays/reset', function(req, res) {
 });
 
 app.get('/app*', function(req, res) {
-  var html = fs.readFileSync('public/index.html', 'utf8');
+  var html = fs.readFileSync(__dirname+'/public/index.html', 'utf8');
   res.send(html);
 });
 

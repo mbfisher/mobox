@@ -3,6 +3,12 @@
 app.factory('$queue', function($rootScope) {
   var $queue = {};
 
+  var _error = function(response) {
+    console.log(response);
+    console.error(response.responseText);
+    alert('Error: '+response.status+'; see console.');
+  }
+
   $queue.tracks = [];
 
   $queue.refresh = function(callback) {
@@ -14,9 +20,15 @@ app.factory('$queue', function($rootScope) {
           for ( var i in tltracks ) {
             var track = tltracks[i].track;
             for ( var j in data ) {
+              if ( 'queued_by' in track ) break;
               var play = data[j];
               if ( play.uri == track.uri ) {
-                track.queued_by = play.user;
+                for ( var user in config.mobox.users ) {
+                  if ( config.mobox.users[user].indexOf(play.client) > -1 ) {
+                    track.queued_by = user;
+                    break;
+                  }
+                }
               }
             }
             if ( !('queued_by' in track) ) {
@@ -31,9 +43,7 @@ app.factory('$queue', function($rootScope) {
 
           $rootScope.$broadcast('queueUpdated');
         },
-        error: function(data) {
-          alert(data.error);
-        }
+        error: _error
       });
     });
   };
@@ -42,6 +52,7 @@ app.factory('$queue', function($rootScope) {
     var tracks = tracks instanceof Array ? tracks : [tracks];
     for ( var i in tracks ) {
       delete tracks[i].queued_by;
+      delete tracks[i].source;
     }
     mopidy.tracklist.add(angular.fromJson(angular.toJson(tracks))).then(function() {
       for ( var i in tracks ) {
@@ -49,10 +60,17 @@ app.factory('$queue', function($rootScope) {
         $.ajax('/db/plays', {
           type: 'POST',
           data: { user: cookie.user, uri: track.uri },
-          error: function(data) { alert(data.error); }
+          error: _error,
+          success: function() {
+            if ( $('.alert.added').css('display') == 'none' ) {
+              $('.alert.added').fadeIn(500);
+              setTimeout(function() {
+                $('.alert.added').fadeOut();
+              }, 3000);
+            }
+          }
         });
       }
-      alert('Added!');
       $queue.refresh();
     }, consoleError);
   };

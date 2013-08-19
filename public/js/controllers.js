@@ -23,6 +23,7 @@ function QueueController($scope, $queue) {
       if ( tltrack.track.uri == uri ) {
         var tmp = tltrack.track.queued_by;
         delete tltrack.track.queued_by;
+        delete tltrack.track.source;
         mopidy.playback.changeTrack(angular.fromJson(angular.toJson(tltrack))).then(function(data) {}, consoleError);
         mopidy.playback.play();
         tltrack.track.queued_by = tmp;
@@ -85,7 +86,12 @@ function SearchController($scope, $queue) {
           s = config.mobox.search_priority[s];
           for ( var m in Object.keys(result) ) {
             m = Object.keys(result)[m];
-            if ( s in sources && m in sources[s] ) result[m] = result[m].concat(sources[s][m]);
+            if ( s in sources && m in sources[s] ) {
+              for ( var i in sources[s][m] ) {
+                sources[s][m][i].source = s;
+              }
+              result[m] = result[m].concat(sources[s][m]);
+            }
           }
         }
 
